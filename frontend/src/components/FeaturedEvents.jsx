@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import { useAppContext } from "../../context/AppContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import API from "../api/axios";
 
 const FeaturedEvents = () => {
   const [events, setEvents] = useState([]);
@@ -20,8 +21,8 @@ const FeaturedEvents = () => {
     const fetchFeaturedEvents = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `http://localhost:5000/api/activities/events/featured?city=${selectedCity}`
+        const res = await API.get(
+          `/api/activities/events/featured?city=${selectedCity}`
         );
         setEvents(res.data || []);
         setError(null);

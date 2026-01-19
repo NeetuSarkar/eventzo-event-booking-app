@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const EditEvent = () => {
   const { id } = useParams();
@@ -13,8 +14,8 @@ const EditEvent = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/admin/events/${id}`,
+        const res = await API.get(
+          `/api/admin/events/${id}`,
           {
             headers: { Authorization: `Bearer ${user?.token}` },
           }
@@ -42,7 +43,7 @@ const EditEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/admin/events/${id}`, form, {
+      await API.put(`/api/admin/events/${id}`, form, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       alert("✅ Event updated successfully!");

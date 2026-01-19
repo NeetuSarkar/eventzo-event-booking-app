@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import API from "../api/axios";
 
 const BookingConfirmation = () => {
   const { bookingId } = useParams();
@@ -35,28 +36,25 @@ const BookingConfirmation = () => {
             setEvent(location.state.booking.activity);
           } else {
             // Fetch event details if not populated
-            const eventRes = await axios.get(
-              `http://localhost:5000/api/events/${
+            const eventRes = await API.get(
+              `/api/events/${
                 location.state.booking.activity || location.state.booking.event
               }`,
               {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
                 },
-              }
+              },
             );
             setEvent(eventRes.data.data);
           }
         } else {
           // Fallback - fetch booking from API
-          const bookingRes = await axios.get(
-            `http://localhost:5000/api/bookings/${bookingId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.token}`,
-              },
-            }
-          );
+          const bookingRes = await API.get(`/api/bookings/${bookingId}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
 
           setBooking(bookingRes.data.data);
 
@@ -68,15 +66,15 @@ const BookingConfirmation = () => {
             setEvent(bookingRes.data.data.activity);
           } else {
             // Fetch event separately
-            const eventRes = await axios.get(
-              `http://localhost:5000/api/events/${
+            const eventRes = await API.get(
+              `/api/events/${
                 bookingRes.data.data.activity || bookingRes.data.data.event
               }`,
               {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
                 },
-              }
+              },
             );
             setEvent(eventRes.data.data);
           }

@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const EventView = () => {
   const { id } = useParams();
@@ -13,10 +14,10 @@ const EventView = () => {
     const fetchData = async () => {
       try {
         const [eventRes, bookingRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/admin/events/${id}`, {
+          API.get(`h/api/admin/events/${id}`, {
             headers: { Authorization: `Bearer ${user?.token}` },
           }),
-          axios.get(`http://localhost:5000/api/admin/bookings/event/${id}`, {
+          API.get(`/api/admin/bookings/event/${id}`, {
             headers: { Authorization: `Bearer ${user?.token}` },
           }),
         ]);

@@ -10,6 +10,7 @@ import {
   Eye,
 } from "lucide-react";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ const AdminDashboard = () => {
       const token = user?.token;
       if (!token) return;
 
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/dashboard",
+      const response = await API.get(
+        "/api/admin/dashboard",
         {
           headers: {
             Authorization: `Bearer ${token}`,

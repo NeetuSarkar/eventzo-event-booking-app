@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { UserCog, Ban, Trash2 } from "lucide-react";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +16,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/users", {
+        const res = await API.get("/api/admin/users", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setUsers(res.data);
@@ -34,7 +35,7 @@ const AdminUsers = () => {
     let filtered = users.filter(
       (user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())
+        user.email.toLowerCase().includes(search.toLowerCase()),
     );
 
     if (roleFilter !== "all") {
@@ -46,7 +47,7 @@ const AdminUsers = () => {
 
   const handlePromote = async (id) => {
     try {
-      await axios.patch(`/api/admin/users/${id}/promote`);
+      await API.patch(`/api/admin/users/${id}/promote`);
       toast.success("User promoted to admin");
       // Optionally update UI to reflect role change
       setUsers(users.map((u) => (u._id === id ? { ...u, role: "admin" } : u)));
@@ -57,12 +58,12 @@ const AdminUsers = () => {
 
   const handleBlock = async (id) => {
     const confirmed = window.confirm(
-      "Are you sure you want to block this user?"
+      "Are you sure you want to block this user?",
     );
     if (!confirmed) return;
 
     try {
-      await axios.patch(`/api/admin/users/${id}/block`);
+      await API.patch(`/api/admin/users/${id}/block`);
       toast.success("User blocked");
       // Optionally update UI here if your user object has a blocked flag
       // Example:
@@ -74,12 +75,12 @@ const AdminUsers = () => {
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this user? This action is irreversible."
+      "Are you sure you want to delete this user? This action is irreversible.",
     );
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/admin/users/${id}`);
+      await API.delete(`/api/admin/users/${id}`);
       toast.success("User deleted");
       setUsers(users.filter((user) => user._id !== id));
     } catch (err) {

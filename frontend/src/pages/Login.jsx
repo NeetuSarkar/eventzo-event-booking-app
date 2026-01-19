@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import API from "../api/axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,8 +22,8 @@ const Login = () => {
     
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+      const response = await API.post(
+        "/api/auth/login",
         { email, password }
       );
 

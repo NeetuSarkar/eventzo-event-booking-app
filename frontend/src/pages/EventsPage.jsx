@@ -8,6 +8,7 @@ import EventCardSkeleton from "../components/EventCardSkeleton";
 import MobileFilterPopup from "../components/MobileFilterPopup";
 import MobileSortPopup from "../components/MobileSortPopup";
 import { FaFilter, FaSort } from "react-icons/fa";
+import API from "../api/axios";
 
 const EventsPage = () => {
   const location = useLocation();
@@ -44,10 +45,7 @@ const EventsPage = () => {
         ...(filters.category && { category: filters.category }),
       };
 
-      const res = await axios.get(
-        "http://localhost:5000/api/activities/events",
-        { params }
-      );
+      const res = await API.get("/api/activities/events", { params });
 
       setEvents(res.data.data || []);
     } catch (error) {
@@ -78,8 +76,6 @@ const EventsPage = () => {
 
     fetchEvents();
   }, [filters, navigate, location.pathname]);
-
-  
 
   // Reset filters (keeps category if present in URL)
   const resetFilters = () => {

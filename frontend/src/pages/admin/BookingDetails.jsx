@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const BookingDetails = () => {
   const { id } = useParams();
@@ -11,8 +12,8 @@ const BookingDetails = () => {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/admin/bookings/${id}`,
+        const res = await API.get(
+          `/api/admin/bookings/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,

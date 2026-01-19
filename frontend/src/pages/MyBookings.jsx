@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EmptyState from "../components/EmptyState";
+import API from "../api/axios";
 
 function MyBookings() {
   const { user, authLoading } = useContext(AuthContext);
@@ -29,7 +30,7 @@ function MyBookings() {
         setLoading(true);
         setError(null);
 
-        const res = await axios.get("http://localhost:5000/api/bookings/my", {
+        const res = await API.get("/api/bookings/my", {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -37,7 +38,7 @@ function MyBookings() {
 
         // Filter to only show confirmed bookings
         const confirmedBookings = res.data.data.filter(
-          (booking) => booking.status === "confirmed"
+          (booking) => booking.status === "confirmed",
         );
 
         setBookings(confirmedBookings);
@@ -128,7 +129,7 @@ function MyBookings() {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
-                            }
+                            },
                           )}
                         </p>
                       </div>

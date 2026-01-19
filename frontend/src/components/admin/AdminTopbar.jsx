@@ -2,6 +2,7 @@ import axios from "axios";
 import { Bell, UserCircle } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const AdminTopbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,12 +19,9 @@ const AdminTopbar = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "http://localhost:5000/api/admin/notifications",
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
+      const res = await API.get("/api/admin/notifications", {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
       setNotifications(res.data.data || []);
     } catch (err) {
       setError("Failed to load notifications");
@@ -34,15 +32,15 @@ const AdminTopbar = () => {
 
   const markAsRead = async (id) => {
     try {
-      await axios.patch(
-        `http://localhost:5000/api/admin/notifications/${id}/mark-as-read`,
+      await API.patch(
+        `/api/admin/notifications/${id}/mark-as-read`,
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
       setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, read: true } : n))
+        prev.map((n) => (n._id === id ? { ...n, read: true } : n)),
       );
     } catch (err) {
       console.error("Error marking notification as read:", err);
@@ -51,12 +49,12 @@ const AdminTopbar = () => {
 
   const markAllAsRead = async () => {
     try {
-      const res = await axios.patch(
-        "http://localhost:5000/api/admin/notifications/mark-all-as-read",
+      const res = await API.patch(
+        "/api/admin/notifications/mark-all-as-read",
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
       if (res.data.success) {
         setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));

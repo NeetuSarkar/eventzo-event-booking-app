@@ -11,6 +11,7 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 import QRCode from "react-qr-code";
+import API from "../api/axios";
 
 function TicketPage() {
   const { id } = useParams();
@@ -23,14 +24,11 @@ function TicketPage() {
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/bookings/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
+        const res = await API.get(`/api/bookings/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
         setTicket(res.data.data);
       } catch (err) {
         console.error(err);
@@ -100,7 +98,7 @@ function TicketPage() {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            }
+                            },
                           )}
                           <br />
                           {ticket.activity?.time}

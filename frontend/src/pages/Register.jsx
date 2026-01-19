@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPhone } from "react-icons/fa";
 import axios from "axios";
+import API from "../api/axios";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -39,8 +40,8 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+      const response = await API.post(
+        "/api/auth/register",
         {
           name: formData.name,
           email: formData.email,

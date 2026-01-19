@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import API from "../api/axios";
 
 const PaymentPage = () => {
   const { id } = useParams();
@@ -67,8 +68,8 @@ const PaymentPage = () => {
       }
 
       // 1. Create booking
-      const bookingResponse = await axios.post(
-        "http://localhost:5000/api/bookings",
+      const bookingResponse = await API.post(
+        "/api/bookings",
         {
           event: id,
           tickets: bookingDetails.quantity,
@@ -81,15 +82,15 @@ const PaymentPage = () => {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       // Store bookingId in a variable outside the handler scope
       const bookingId = bookingResponse.data.data._id;
 
       // 2. Create Razorpay order
-      const orderResponse = await axios.post(
-        "http://localhost:5000/api/payments/create-order",
+      const orderResponse = await API.post(
+        "/api/payments/create-order",
         {
           amount: totalAmount * 100,
           currency: "INR",
@@ -99,7 +100,7 @@ const PaymentPage = () => {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       // 3. Initialize Razorpay payment
@@ -114,8 +115,8 @@ const PaymentPage = () => {
         handler: async function (response) {
           try {
             // Verify payment
-            const verificationResponse = await axios.post(
-              `http://localhost:5000/api/bookings/${bookingId}/verify`,
+            const verificationResponse = await API.post(
+              `/api/bookings/${bookingId}/verify`,
               {
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpayOrderId: response.razorpay_order_id,
@@ -125,7 +126,7 @@ const PaymentPage = () => {
                 headers: {
                   Authorization: `Bearer ${user.token}`,
                 },
-              }
+              },
             );
 
             // Only navigate if verification was successful
@@ -157,7 +158,7 @@ const PaymentPage = () => {
       rzp.on("payment.failed", function (response) {
         console.error("Payment failed:", response.error);
         setError(
-          `Payment failed: ${response.error.description || "Unknown error"}`
+          `Payment failed: ${response.error.description || "Unknown error"}`,
         );
       });
     } catch (error) {
@@ -165,7 +166,7 @@ const PaymentPage = () => {
       setError(
         error.response?.data?.message ||
           error.message ||
-          "Failed to initialize payment. Please try again."
+          "Failed to initialize payment. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -200,7 +201,7 @@ const PaymentPage = () => {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
-                  }
+                  },
                 )}
               </p>
             </div>

@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import API from "../api/axios";
 
 const UpcomingEvents = () => {
   const [events, setEvents] = useState([]);
@@ -19,8 +20,8 @@ const UpcomingEvents = () => {
     const fetchUpcomingEvents = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `http://localhost:5000/api/activities/events/upcoming?city=${selectedCity}&limit=6`
+        const res = await API.get(
+          `/api/activities/events/upcoming?city=${selectedCity}&limit=6`,
         );
         setEvents(res.data || []);
         setError(null);

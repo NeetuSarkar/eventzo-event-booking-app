@@ -3,6 +3,7 @@ import { useEffect, useState, useContext, useMemo } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Eye, Plus } from "lucide-react";
 import { AuthContext } from "../../../context/AuthContext";
+import API from "../../api/axios";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -15,7 +16,7 @@ const AdminEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/events", {
+      const res = await API.get("/api/admin/events", {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -28,8 +29,8 @@ const AdminEvents = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/admin/events/${eventToDelete._id}`,
+      await API.delete(
+        `/api/admin/events/${eventToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${user?.token}`,

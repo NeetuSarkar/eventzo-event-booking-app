@@ -15,6 +15,7 @@ import { AuthContext } from "../../context/AuthContext";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 import MapContainer from "../components/MapContainer";
+import API from "../api/axios";
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const EventDetails = () => {
   const fetchEvent = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/api/activities/${id}`);
+      const res = await API.get(`/api/activities/${id}`);
       if (res.data) {
         setEvent(res.data.data);
       } else {
@@ -49,9 +50,9 @@ const EventDetails = () => {
   }, [id]);
   useEffect(() => {
     const timer = setTimeout(() => {
-      axios
+      API
         .post(
-          "http://localhost:5000/api/activity-tracker/track-user-visit",
+          "/api/activity-tracker/track-user-visit",
           { id },
           {
             headers: {
