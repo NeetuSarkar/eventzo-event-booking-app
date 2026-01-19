@@ -28,7 +28,7 @@ const activitySchema = new mongoose.Schema(
     availableSeats: { type: Number, required: true },
 
     bookingCount: { type: Number, default: 0 },
-    ageLimit: { type: Number, default: 0 }, // 0 = no limit; 18 = 18+
+    ageLimit: { type: Number, default: 0 }, 
 
     status: {
       type: String,
@@ -36,8 +36,7 @@ const activitySchema = new mongoose.Schema(
       default: "upcoming",
     },
 
-    tags: [{ type: String }], // optional filter chips
-
+    tags: [{ type: String }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {

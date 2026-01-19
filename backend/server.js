@@ -1,4 +1,4 @@
-import "dotenv/config"; // This must be the VERY FIRST import
+import "dotenv/config"; 
 
 import express from "express";
 import cors from "cors";
@@ -16,6 +16,8 @@ console.log("Env check:", {
   port: process.env.PORT,
   razorpayKey: process.env.RAZORPAY_KEY_ID ? "exists" : "missing",
 });
+
+
 
 connectDB();
 

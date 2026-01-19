@@ -1,4 +1,3 @@
-// src/pages/admin/AdminDashboard.jsx
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,6 +14,7 @@ import { AuthContext } from "../../../context/AuthContext";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,11 +29,11 @@ const AdminDashboard = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setDashboardData(response.data);
-      console.log(response.data);
+      console.log("Dashboard data:", response.data);
     } catch (error) {
       console.error("Failed to fetch admin dashboard:", error);
     } finally {
@@ -45,27 +45,33 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, []);
 
-  if (loading) return <div>Loading dashboard...</div>;
+  if (loading) {
+    return <div className="p-6 text-lg">Loading dashboard...</div>;
+  }
+
+  if (!dashboardData) {
+    return <div className="p-6 text-red-600">No dashboard data found</div>;
+  }
 
   const stats = [
     {
       label: "Total Events",
-      value: dashboardData?.totalEvents ?? 0,
+      value: dashboardData.totalEvents ?? 0,
       icon: <Calendar className="text-blue-600" size={24} />,
     },
     {
       label: "Total Bookings",
-      value: dashboardData?.totalBookings ?? 0,
+      value: dashboardData.totalBookings ?? 0,
       icon: <ClipboardList className="text-green-600" size={24} />,
     },
     {
       label: "Upcoming Events",
-      value: dashboardData?.upcomingEventsCount ?? 0,
+      value: dashboardData.upcomingEventsCount ?? 0,
       icon: <Clock className="text-yellow-600" size={24} />,
     },
     {
       label: "Earnings",
-      value: `₹${dashboardData?.totalEarnings?.toLocaleString() ?? "0"}`,
+      value: `₹${(dashboardData.totalEarnings ?? 0).toLocaleString()}`,
       icon: <DollarSign className="text-purple-600" size={24} />,
     },
   ];
@@ -113,21 +119,27 @@ const AdminDashboard = () => {
         <div className="bg-white shadow rounded-xl p-6">
           <h2 className="text-xl font-bold mb-4">Recent Events</h2>
           <ul className="space-y-3">
-            {dashboardData?.recentUpcomingEvents?.map((event, index) => (
-              <li
-                key={index}
-                className="flex justify-between text-gray-700 border-b pb-2"
-              >
-                <span>{event.title}</span>
-                <span className="text-sm text-gray-500">
-                  {new Date(event.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              </li>
-            ))}
+            {dashboardData.recentUpcomingEvents?.length > 0 ? (
+              dashboardData.recentUpcomingEvents.map((event) => (
+                <li
+                  key={event._id}
+                  className="flex justify-between text-gray-700 border-b pb-2"
+                >
+                  <span>{event.title}</span>
+                  <span className="text-sm text-gray-500">
+                    {event.date
+                      ? new Date(event.date).toLocaleDateString("en-IN", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "N/A"}
+                  </span>
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-500">No upcoming events</li>
+            )}
           </ul>
         </div>
 
@@ -135,20 +147,29 @@ const AdminDashboard = () => {
         <div className="bg-white shadow rounded-xl p-6">
           <h2 className="text-xl font-bold mb-4">Recent Bookings</h2>
           <ul className="space-y-3">
-            {dashboardData?.recentBookings?.map((booking, index) => (
-              <li
-                key={index}
-                className="flex justify-between text-gray-700 border-b pb-2"
-              >
-                <div>
-                  <div className="font-medium">{booking.user.name}</div>
-                  <div className="text-sm text-gray-500">
-                    {booking.activity} - {booking._id}
+            {dashboardData.recentBookings?.length > 0 ? (
+              dashboardData.recentBookings.map((booking) => (
+                <li
+                  key={booking._id}
+                  className="flex justify-between text-gray-700 border-b pb-2"
+                >
+                  <div>
+                    <div className="font-medium">
+                      {booking.user?.name ?? "Unknown User"}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {booking.activity?.title ?? "Unknown Event"} •{" "}
+                      {booking._id}
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">₹{booking.totalAmount}</div>
-              </li>
-            ))}
+                  <div className="text-right font-medium">
+                    ₹{booking.totalAmount ?? 0}
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-500">No recent bookings</li>
+            )}
           </ul>
         </div>
       </div>

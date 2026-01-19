@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "eventzo-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the initall backend for eventzo applicaion where I am using mvc artitecture, where I implemented auth system, payment intregration, mailer",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

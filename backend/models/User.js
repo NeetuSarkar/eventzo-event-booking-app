@@ -31,12 +31,12 @@ const userSchema = new mongoose.Schema(
     },
 
     location: {
-      type: String, // city or area, e.g., "Koramangala"
+      type: String, 
       trim: true,
     },
 
     interests: {
-      type: [String], // e.g., ["music", "tech", "standup"]
+      type: [String], 
       default: [],
     },
 
@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
 
     // Optional: For push notifications, reminders
     notificationTokens: {
-      type: [String], // For web or mobile push notification tokens
+      type: [String], 
       default: [],
     },
   },
